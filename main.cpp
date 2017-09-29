@@ -5,6 +5,7 @@
 
 #include "src/TableDrawer.h"
 
+// TODO: is it good name?
 std::vector<std::vector<std::string>> ConvertV8ArrayBasedTableToCppVectorBasedTable(v8::Local<v8::Array> v8ArrayBasedTable) {
   std::vector<std::vector<std::string>> cppVectorBasedTable(v8ArrayBasedTable->Length());
 
