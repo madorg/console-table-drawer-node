@@ -1,33 +1,38 @@
-#include <node.h>
+#include <vector>
+#include <string>
+
+#include "node.h"
 
 #include "src/TableDrawer.h"
 
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Object;
-using v8::String;
-using v8::Value;
-using v8::Array;
+std::vector<std::vector<std::string>> ConvertV8ArrayBasedTableToCppVectorBasedTable(v8::Local<v8::Array> v8ArrayBasedTable) {
+  std::vector<std::vector<std::string>> cppVectorBasedTable(v8ArrayBasedTable->Length());
 
-void EntryPoint(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
+  for (unsigned int i = 0; i < v8ArrayBasedTable->Length(); i++) {
+    v8::Local<v8::Array> v8ArrayBasedRow = v8::Local<v8::Array>::Cast(v8ArrayBasedTable->Get(i));
 
-  // Local<Array> arr = Local<Array>::Cast(args[0]);
+    for (unsigned int j = 0; j < v8ArrayBasedRow->Length(); j++) {
+      v8::String::Utf8Value cell(v8ArrayBasedRow->Get(j)->ToString());
+      cppVectorBasedTable[i].push_back(std::string(*cell));
+    }
+  }
 
-  // std::vector<double> v = { arr->Get(0)->NumberValue(), arr->Get(1)->NumberValue() };
-  // for (int i = 0; i < v.size(); i++) {
-  //   std::cout << v[i] << std::endl;
-  // }
-
-  tabledrawer::printTable(1, 1, {
-    { "1", "2" },
-    { "3", "4" }
-  });
+  return cppVectorBasedTable;
 }
 
-void init(Local<Object> exports) {
+void EntryPoint(const v8::FunctionCallbackInfo<v8::Value>& args) {
+  v8::Isolate* isolate = args.GetIsolate();
+
+  // TODO: validate args
+
+  v8::Local<v8::Array> v8ArrayBasedTable = v8::Local<v8::Array>::Cast(args[0]);
+  std::vector<std::vector<std::string>> cppVectorBasedTable = ConvertV8ArrayBasedTableToCppVectorBasedTable(v8ArrayBasedTable);
+
+  tabledrawer::printTable(1, 1, cppVectorBasedTable);
+}
+
+void Init(v8::Local<v8::Object> exports) {
   NODE_SET_METHOD(exports, "printTable", EntryPoint);
 }
 
-NODE_MODULE(NODE_GYP_MODULE_NAME, init)
+NODE_MODULE(NODE_GYP_MODULE_NAME, Init)

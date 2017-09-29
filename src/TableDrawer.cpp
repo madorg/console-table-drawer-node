@@ -56,25 +56,33 @@ namespace tabledrawer {
 		print(handle, { COLUMN_COORD_X(x, (short)fieldValues.size()), y }, colors[3]);
 	}
 
-	void printTable(int x, int y, std::vector<std::vector<const char*>> fields) {
-		HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD coord = { x, y };
-
-		short rowCount = (short)fields.size();
-		short columnCount = (short)fields[0].size();
-		short tableWidth = columnCount * COLUMN_SIZE + 1;
-		short x = coord.X;
-		short y = coord.Y;
-
-		print(consoleHandle, coord, color, LINE(tableWidth));
-
-		for (short i = 0; i < rowCount; i++)
-		{
-			printColumnRow(consoleHandle, x, ROW_COORD_Y(y, i), fields[i]);
-			print(consoleHandle, { x, ROW_LINE_COORD_Y(y, i) }, color, LINE(tableWidth));
+	void printTable(int x, int y, std::vector<std::vector<std::string>> table) {
+		for (int i = 0; i < table.size(); i++) {
+			for (int j = 0; j < table[i].size(); j++) {
+				std::cout << table[i][j] << " ";
+			}
+	
+			std::cout << std::endl;
 		}
 
-		print(consoleHandle, { coord.X, coord.Y + rowCount * 2 }, color, LINE(tableWidth));
+		// HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+		// COORD coord = { x, y };
+
+		// short rowCount = (short)fields.size();
+		// short columnCount = (short)fields[0].size();
+		// short tableWidth = columnCount * COLUMN_SIZE + 1;
+		// short x = coord.X;
+		// short y = coord.Y;
+
+		// // print(consoleHandle, coord, color, LINE(tableWidth));
+
+		// for (short i = 0; i < rowCount; i++)
+		// {
+		// 	printColumnRow(consoleHandle, x, ROW_COORD_Y(y, i), fields[i]);
+		// 	print(consoleHandle, { x, ROW_LINE_COORD_Y(y, i) }, color, LINE(tableWidth));
+		// }
+
+		// print(consoleHandle, { coord.X, coord.Y + rowCount * 2 }, color, LINE(tableWidth));
 	}
 
 }

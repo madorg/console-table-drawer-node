@@ -16,6 +16,6 @@
 namespace tabledrawer {
 
 	// TODO: replace std::vector with native array for more flexible compatibility
-	void printTable(int x, int y, std::vector<std::vector<const char*>> fields);
+	void printTable(int x, int y, std::vector<std::vector<std::string>> fields);
 
 }
